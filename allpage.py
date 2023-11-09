@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 import os # use for store file in one folder 
-import re
+import re # use for special character
 
 
 def scrape_and_save_transcript(url,folder_path):
