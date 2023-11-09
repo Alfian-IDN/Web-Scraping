@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 import os # use for store file in one folder 
+import re
 
 
 def scrape_and_save_transcript(url,folder_path):
@@ -10,7 +11,8 @@ def scrape_and_save_transcript(url,folder_path):
 
     box = soup.find('article',class_='main-article')
     title = box.find('h1').get_text()
-    fix_title= title.replace('?', '').replace('\\', '').replace('/', '').replace(':', '')#or u can create regex
+    pattern = r'[?\\/:]'
+    fix_title= re.sub(pattern, '',title)
     transcript = box.find('div', class_='full-script').get_text(strip=True, separator=' ')
     
     file_path = os.path.join(folder_path, f'{fix_title}.txt')
@@ -20,8 +22,7 @@ def scrape_and_save_transcript(url,folder_path):
 def main():
         root = 'https://subslikescript.com'
         for page in range(1, 6): 
-                url =f'{root}/movies/?page={page}'  
-                print(url)    
+                url =f'{root}/movies/?page={page}'    
                 result = requests.get(url)
                 content = result.text
                 soup = BeautifulSoup(content, 'lxml')
